@@ -1,14 +1,16 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react'
-import gsap from 'gsap'
+import React from 'react'
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import Des1 from "./pages/Des1";
+import Des2 from "./pages/Des2";
+import Des3 from "./pages/Des3";
+import "./App.css";
 
-import './App.css'
-
-function App() {
+const App = () => {
   return (
-    <div className="p-[200px] bg-yellow-400">
-      
+    <div>
+      <Des3 />
     </div>
-
-
   )
 }
+
+export default App
