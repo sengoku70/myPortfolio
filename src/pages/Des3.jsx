@@ -204,13 +204,34 @@ export default function PremiumPortfolio() {
       img: "/image/Screenshot 2026-03-24 182734.png",
       colors: ["primary", "accent"],
       date: "Aug 2025"
+    },
+    {
+      title: "Cloud Architect",
+      desc: "Simulated cloud architecture explorer focusing on multi-tier service orchestration and scalability.",
+      tech: ["AWS", "Docker", "Kubernetes", "C++"],
+      link: "#",
+      github: "#",
+      colors: ["primary", "secondary"],
+      img: null,
+      date: "Upcoming"
+    },
+    {
+      title: "AI Class Converter",
+      desc: "AI-based offline to online class conversion system to transform physical learning content into interactive digital formats.",
+      tech: ["Python", "TensorFlow", "React Native", "Flask"],
+      link: "#",
+      github: "#",
+      colors: ["secondary", "accent"],
+      img: null,
+      date: "Upcoming"
     }
   ];
 
   const skills = [
-    { category: "Languages", items: ["C++", "JavaScript", "C", "PHP"], icon: Terminal },
-    { category: "Frameworks", items: ["React", "Node.js", "TailwindCSS", "Express.js"], icon: Cpu },
-    { category: "Tools & DB", items: ["MySQL", "MongoDB", "VS Code", "JWT"], icon: Database }
+    { category: "Languages", items: ["C++", "Python", "JavaScript", "C", "PHP"], icon: Terminal },
+    { category: "Frameworks", items: ["React", "React Native", "Node.js", "TailwindCSS", "Express.js"], icon: Cpu },
+    { category: "Tools & DB", items: ["MySQL", "PostgreSQL", "SQLite", "MongoDB", "JWT"], icon: Database },
+    { category: "Platforms", items: ["Render", "AWS", "Figma", "VS Code", "MongoDB Compass", "Vercel", "GitHub"], icon: Globe }
   ];
 
   const certificates = [
@@ -437,7 +458,7 @@ export default function PremiumPortfolio() {
         {/* Skills Section */}
         <section id="skills" className="mb-32">
           <SectionHeading icon={Terminal}>Technical Stack</SectionHeading>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skills.map((skill, idx) => (
               <Card key={idx} className="p-6 group hover:border-primary/50 transition-colors">
                 <div className="flex items-center gap-3 mb-6">

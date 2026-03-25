@@ -13,7 +13,10 @@ import {
   Calendar,
   ChevronRight,
   Palette,
+  Monitor,
+  Cloud,
   Award,
+  Zap,
   FileText
 } from "lucide-react";
 
@@ -142,6 +145,21 @@ export default function WhiteGlassPortfolio() {
     root.style.setProperty("--accent", currentCombo.accent);
   }, [currentCombo]);
 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+      
+      const target = e.target;
+      const isInteractive = target.closest('button, a, .cursor-pointer, .group');
+      setIsHovering(!!isInteractive);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   const projects = [
     {
       title: "ElectroSystem",
@@ -186,9 +204,52 @@ export default function WhiteGlassPortfolio() {
   ];
 
   const skills = [
-    { category: "Languages", items: ["C++", "JavaScript", "C", "PHP"], icon: Terminal },
-    { category: "Frameworks", items: ["React", "Node.js", "TailwindCSS", "Express.js"], icon: Cpu },
-    { category: "Tools & DB", items: ["MySQL", "MongoDB", "VS Code", "JWT"], icon: Database }
+    { 
+      category: "Languages", 
+      items: [
+        { name: "C++", logo: "cplusplus" },
+        { name: "Python", logo: "python" },
+        { name: "JavaScript", logo: "javascript" },
+        { name: "C", logo: "c" },
+        { name: "PHP", logo: "php" }
+      ], 
+      icon: Terminal 
+    },
+    { 
+      category: "Frameworks", 
+      items: [
+        { name: "React", logo: "react" },
+        { name: "React Native", logo: "react" },
+        { name: "Node.js", logo: "nodejs" },
+        { name: "TailwindCSS", logo: "tailwindcss" },
+        { name: "Express.js", logo: "express" }
+      ], 
+      icon: Cpu 
+    },
+    { 
+      category: "Tools & DB", 
+      items: [
+        { name: "MySQL", logo: "mysql" },
+        { name: "PostgreSQL", logo: "postgresql" },
+        { name: "SQLite", logo: "sqlite" },
+        { name: "MongoDB", logo: "mongodb" },
+        { name: "JWT", logo: "npm" }
+      ], 
+      icon: Database 
+    },
+    { 
+      category: "Platforms", 
+      items: [
+        { name: "Render", logo: "cloud" },
+        { name: "AWS", logo: "amazonwebservices" },
+        { name: "Figma", logo: "figma" },
+        { name: "VS Code", logo: "vscode" },
+        { name: "MongoDB Compass", logo: "mongodb" },
+        { name: "Vercel", logo: "vercel" },
+        { name: "GitHub", logo: "github" }
+      ], 
+      icon: Globe 
+    }
   ];
 
   const certificates = [
@@ -220,11 +281,56 @@ export default function WhiteGlassPortfolio() {
 
   return (
     <div
-      className="min-h-screen transition-all duration-1000 text-slate-600 selection:bg-primary/20 selection:text-primary"
+      className="min-h-screen transition-all duration-1000 text-slate-600 selection:bg-primary/20 selection:text-primary w-full overflow-x-hidden"
       style={{ ...cssVariables, backgroundColor: '#ffffff' }}
     >
+      {/* Custom Fancy Cursor */}
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999] overflow-hidden hidden lg:block">
+        {/* Trail Dots */}
+        {[0.1, 0.2, 0.3, 0.4].map((delay, index) => (
+          <motion.div
+            key={index}
+            animate={{ 
+              x: mousePos.x - 4, 
+              y: mousePos.y - 4,
+              scale: isHovering ? 0.8 : 1 - index * 0.15,
+            }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 400 - index * 60, 
+              damping: 35 + index * 5, 
+              mass: 0.1 + index * 0.15 
+            }}
+            className="w-2 h-2 rounded-full fixed bg-primary/20 z-[98]"
+          />
+        ))}
+
+        {/* Head */}
+        <motion.div
+          animate={{ 
+            x: mousePos.x - 8, 
+            y: mousePos.y - 8,
+            scale: isHovering ? 1.5 : 1,
+          }}
+          transition={{ type: "spring", stiffness: 800, damping: 35, mass: 0.2 }}
+          className="w-4 h-4 rounded-full fixed bg-primary shadow-2xl z-[100]"
+        />
+        <motion.div
+          animate={{ 
+            x: mousePos.x - 24, 
+            y: mousePos.y - 24,
+            scale: isHovering ? 1.8 : 1,
+            borderColor: isHovering ? `rgb(var(--secondary))` : `rgb(var(--primary), 0.3)`,
+            borderWidth: isHovering ? 3 : 2
+          }}
+          transition={{ type: "spring", stiffness: 250, damping: 20, mass: 0.8 }}
+          className="w-12 h-12 rounded-full fixed border-2 z-[99]"
+        />
+      </div>
       <style dangerouslySetInnerHTML={{
         __html: `
+        * { cursor: none !important; }
+        
         :root {
           --primary: ${currentCombo.primary};
           --secondary: ${currentCombo.secondary};
@@ -451,7 +557,7 @@ export default function WhiteGlassPortfolio() {
         {/* Skills Section */}
         <section id="skills" className="mb-32">
           <SectionHeading icon={Terminal}>Technical Stack</SectionHeading>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skills.map((skill, idx) => (
               <Card key={idx} className="p-6 group hover:border-primary/20 transition-colors">
                 <div className="flex items-center gap-3 mb-6">
@@ -462,8 +568,14 @@ export default function WhiteGlassPortfolio() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {skill.items.map((item) => (
-                    <span key={item} className="px-3 py-1 rounded-full backdrop-blur-md bg-white border border-slate-200 text-sm text-slate-600 hover:border-primary/30 transition-all shadow-sm">
-                      {item}
+                    <span key={item.name} className="px-3 py-1.5 rounded-full backdrop-blur-md bg-white border border-slate-200 text-sm text-slate-600 hover:border-primary/30 transition-all shadow-sm flex items-center gap-2 group/item">
+                      <img 
+                        src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${item.logo}/${item.logo}-original.svg`} 
+                        alt={item.name}
+                        className="w-4 h-4 group-hover/item:scale-125 transition-transform"
+                        onError={(e) => { e.target.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/chrome/chrome-original.svg'; }}
+                      />
+                      {item.name}
                     </span>
                   ))}
                 </div>
@@ -573,6 +685,91 @@ export default function WhiteGlassPortfolio() {
                 </Card>
               </motion.div>
             ))}
+          </div>
+        </section>
+        {/* Beyond Code Section */}
+        <section id="beyond-code" className="mb-32 relative py-12">
+          <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[35rem] font-black text-[#22c55e] opacity-[0.6] select-none pointer-events-none z-0">
+            &
+          </div>
+          <div className="relative z-10">
+            <SectionHeading icon={Zap}>Beyond Code</SectionHeading>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-8 group hover:border-primary/20 bg-primary/5 transition-all">
+              <div className="flex gap-4 items-start">
+                <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-primary group-hover:scale-110 transition-transform">
+                  <Monitor size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">Native Development (C++ & Qt)</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Currently deep-diving into <span className="text-primary font-semibold">C++ development using Qt</span> to build high-performance, native window applications. 
+                    I'm focused on mastering low-level system control and creating fluid desktop experiences that interact directly with the OS.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8 group hover:border-secondary/20 bg-secondary/5 transition-all">
+              <div className="flex gap-4 items-start">
+                <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-secondary group-hover:scale-110 transition-transform">
+                  <Cloud size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">Cloud & DevOps Mastery</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Expanding my knowledge base into <span className="text-secondary font-semibold">Cloud Infrastructure and DevOps pipelines</span>. 
+                    Learning to architect scalable environments and automate delivery to push my digital solutions beyond just code and into robust, production-ready ecosystems.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          <div className="mt-12">
+            <h4 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
+              <span className="w-12 h-[1px] bg-slate-200"></span>
+              Upcoming Projects
+              <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] uppercase tracking-widest rounded-full">In Development</span>
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Cloud Architect",
+                  desc: "Simulated cloud architecture explorer focusing on multi-tier service orchestration and scalability.",
+                  tech: ["AWS", "Docker", "Kubernetes", "C++"],
+                  colors: ["primary", "secondary"]
+                },
+                {
+                  title: "AI Class Converter",
+                  desc: "AI-based offline to online class conversion system to transform physical learning content into interactive digital formats.",
+                  tech: ["Python", "TensorFlow", "React Native", "Flask"],
+                  colors: ["secondary", "accent"]
+                }
+              ].map((proj, i) => (
+                <Card key={i} className="p-0 border-primary/10 overflow-hidden">
+                  <div className="flex h-full flex-col md:flex-row">
+                    <div className="md:w-1/3 aspect-square bg-slate-900 flex items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 opacity-60" />
+                      <div className="relative z-10 flex flex-col items-center gap-2">
+                        <Terminal size={32} className="text-white opacity-50" />
+                        <span className="text-[10px] text-white font-black uppercase tracking-[0.3em] animate-pulse">Upcoming</span>
+                      </div>
+                    </div>
+                    <div className="p-6 md:w-2/3 flex flex-col justify-center">
+                      <h4 className="text-lg font-bold text-slate-900 mb-2">{proj.title}</h4>
+                      <p className="text-xs text-slate-500 mb-4">{proj.desc}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {proj.tech.map(t => (
+                          <span key={t} className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+            </div>
           </div>
         </section>
 
