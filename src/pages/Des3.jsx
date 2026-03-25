@@ -170,7 +170,8 @@ export default function PremiumPortfolio() {
       title: "ElectroSystem",
       desc: "Interactive platform for hybrid wind-solar energy systems with cost estimation and smooth animations.",
       tech: ["React", "Node.js", "TailwindCSS"],
-      link: "https://github.com/sengoku70/electrosystems.github.io.git",
+      link: "https://sengoku70-electrosystemsgithubio.vercel.app",
+      github: "https://github.com/sengoku70/electrosystems.github.io.git",
       colors: ["primary", "secondary"],
       img: "/image/image.png",
       date: "Dec 2025"
@@ -189,6 +190,8 @@ export default function PremiumPortfolio() {
       desc: "Productivity ecosystem with Sticky Notes, Focus Mode, and custom syllabus management.",
       tech: ["React Native", "Expo", "SQLite", "TailwindCSS"],
       link: "https://github.com/sengoku70/TimeBinder_Mobile_app.git",
+      github: "https://github.com/sengoku70/TimeBinder_Mobile_app.git",
+      img: "/image/WhatsApp Image 2025-11-18 at 11.49.04 AM.jpeg",
       colors: ["secondary", "accent"],
       date: "Sep 2025"
     },
@@ -196,7 +199,8 @@ export default function PremiumPortfolio() {
       title: "Cubicle",
       desc: "Interactive 3D Rubik's Cube visualizer and solution guide for learning algorithms through immersion.",
       tech: ["React", "Three.js", "TailwindCSS"],
-      link: "https://github.com/sengoku70/Cubicle.git",
+      link: "https://cubicle-beta.vercel.app",
+      github: "https://github.com/sengoku70/Cubicle.git",
       img: "/image/Screenshot 2026-03-24 182734.png",
       colors: ["primary", "accent"],
       date: "Aug 2025"
@@ -511,15 +515,32 @@ export default function PremiumPortfolio() {
                       <img 
                         src={project.img} 
                         alt={project.title} 
-                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none"
+                        className="absolute inset-0 w-full h-full object-cover object-top opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none"
                       />
                     )}
                     <div className="absolute inset-x-0 bottom-0 p-4 bg-black/60 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform">
                       <div className="text-xs text-white font-mono">{project.date}</div>
                     </div>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button variant="primary" className="gap-2">
-                        View Code <Github size={16} />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-3">
+                      <Button 
+                        variant="primary" 
+                        className="gap-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(project.github || project.link, "_blank");
+                        }}
+                      >
+                        <Github size={16} /> Code
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="gap-2 bg-black/40"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(project.link, "_blank");
+                        }}
+                      >
+                        <ExternalLink size={16} /> Live
                       </Button>
                     </div>
                   </div>

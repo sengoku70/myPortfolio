@@ -8,7 +8,7 @@ import "./App.css";
 const App = () => {
   return (
     <div>
-      <Des3 />
+      <Des2 />
     </div>
   )
 }
