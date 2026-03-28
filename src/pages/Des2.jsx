@@ -9,45 +9,46 @@ import {
   Cpu,
   Database,
   Globe,
+  Code2,
   GraduationCap,
   Calendar,
   ChevronRight,
   Palette,
   Monitor,
   Cloud,
-  Award,
   Zap,
+  Award,
   FileText
 } from "lucide-react";
 
 // Color definitions in RGB for Tailwind opacity compatibility
 const COLOR_COMBOS = [
   {
-    name: "Deep Sea",
-    primary: "37 99 235", // Blue 600
-    secondary: "2 132 199", // Sky 600
+    name: "Pure Glass",
+    primary: "79 70 229", // Indigo 600
+    secondary: "124 58 237", // Violet 600
+    accent: "219 39 119", // Pink 600
+    bg: "#ffffff"
+  },
+  {
+    name: "Oceanic",
+    primary: "2 132 199", // Sky 600
+    secondary: "5 150 105", // Emerald 600
     accent: "79 70 229", // Indigo 600
     bg: "#ffffff"
   },
   {
-    name: "Sky High",
-    primary: "14 165 233", // Sky 500
-    secondary: "59 130 246", // Blue 500
-    accent: "6 182 212", // Cyan 500
-    bg: "#ffffff"
-  },
-  {
-    name: "Northern Lights",
-    primary: "30 64 175", // Blue 800
-    secondary: "6 182 212", // Cyan 500
-    accent: "79 70 229", // Indigo 600
+    name: "Sunset",
+    primary: "220 38 38", // Red 600
+    secondary: "217 119 6", // Amber 600
+    accent: "124 58 237", // Violet 600
     bg: "#ffffff"
   }
 ];
 
 // Glassmorphism UI Components for Light Theme
 const Card = ({ children, className = "" }) => (
-  <div className={`backdrop-blur-2xl bg-neutral-400/40 border border-white/60 rounded-3xl overflow-hidden transition-all duration-500 hover:bg-white/60 hover:border-primary/30 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15),inset_0_0_20px_rgba(255,255,255,0.3)] ${className}`}>
+  <div className={`backdrop-blur-2xl bg-white/40 border border-white/60 rounded-3xl overflow-hidden transition-all duration-500 hover:bg-white/60 hover:border-primary/30 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12)] ${className}`}>
     <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none opacity-50" />
     <div className="relative z-10">{children}</div>
   </div>
@@ -55,8 +56,8 @@ const Card = ({ children, className = "" }) => (
 
 const Button = ({ children, className = "", variant = "primary", ...props }) => {
   const variants = {
-    primary: "bg-primary hover:bg-primary/90 text-white shadow-[0_15px_30px_-5px_rgba(var(--primary),0.3),inset_0_2px_4px_rgba(255,255,255,0.3)] hover:shadow-[0_20px_40px_-5px_rgba(var(--primary),0.4)]",
-    outline: "backdrop-blur-md border border-slate-200 hover:bg-slate-50 text-slate-700 shadow-xl inset-0 shadow-white/50",
+    primary: "backdrop-blur-md bg-primary/80 hover:bg-primary text-white border border-primary/20 shadow-[0_15px_30px_-5px_rgba(var(--primary),0.3)]",
+    outline: "backdrop-blur-md border border-slate-200 hover:bg-slate-50 text-slate-700 shadow-sm hover:shadow-md transition-all",
     ghost: "text-slate-600 hover:text-slate-900 hover:bg-slate-100/50"
   };
   return (
@@ -68,7 +69,7 @@ const Button = ({ children, className = "", variant = "primary", ...props }) => 
 
 const SectionHeading = ({ children, icon: Icon }) => (
   <div className="flex items-center gap-4 mb-8">
-    <div className="p-3 rounded-2xl backdrop-blur-xl bg-primary/10 border border-primary/20 text-primary shadow-2xl">
+    <div className="p-3 rounded-2xl backdrop-blur-xl bg-primary/10 border border-primary/20 text-primary">
       <Icon size={24} />
     </div>
     <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{children}</h2>
@@ -90,10 +91,17 @@ const InteractiveCube = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  const faceStyle = "absolute w-36 h-36 border-[1px] border-blue-400/40 backdrop-blur-md bg-white/30 flex items-center justify-center select-none shadow-[0_0_50px_rgba(59,130,246,0.25)]";
+  const faceStyle = "absolute w-36 h-36 border-[1px] border-primary/20 backdrop-blur-md bg-white/30 flex items-center justify-center select-none shadow-[0_0_20px_rgba(var(--primary),0.05)]";
 
   return (
-    <div className="flex justify-center mb-24" style={{ perspective: '1200px' }}>
+    <div className="flex justify-center mb-24 relative" style={{ perspective: '1200px' }}>
+      {/* Background Glow */}
+      <motion.div 
+        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute w-40 h-40 bg-primary/30 blur-[40px] rounded-full z-0"
+      />
+      
       <motion.div
         animate={{
           rotateX: rotation.x,
@@ -101,7 +109,7 @@ const InteractiveCube = () => {
         }}
         transition={{ type: "spring", stiffness: 120, damping: 25 }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative w-36 h-36"
+        className="relative w-36 h-36 z-10"
       >
         {/* Front */}
         <div className={`${faceStyle} overflow-hidden`} style={{ transform: 'translateZ(72px)' }}>
@@ -145,27 +153,12 @@ export default function WhiteGlassPortfolio() {
     root.style.setProperty("--accent", currentCombo.accent);
   }, [currentCombo]);
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-      
-      const target = e.target;
-      const isInteractive = target.closest('button, a, .cursor-pointer, .group');
-      setIsHovering(!!isInteractive);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   const projects = [
     {
       title: "ElectroSystem",
       desc: "Interactive platform for hybrid wind-solar energy systems with cost estimation and smooth animations.",
       tech: ["React", "Node.js", "TailwindCSS"],
-      link: "https://sengoku70-electrosystemsgithubio.vercel.app",
+      link: "https://sengoku70-electrosystemsgithub-ix1lkvdop.vercel.app",
       github: "https://github.com/sengoku70/electrosystems.github.io.git",
       colors: ["primary", "secondary"],
       img: "/image/image.png",
@@ -175,8 +168,7 @@ export default function WhiteGlassPortfolio() {
       title: "Amazon Clone",
       desc: "Full-stack e-commerce engine with JWT auth, MongoDB, and production-ready modular architecture.",
       tech: ["Node.js", "Express.js", "MongoDB", "TailwindCSS"],
-      link: "https://github.com/sengoku70/Amazon-clone.git",
-      github: "https://github.com/sengoku70/Amazon-clone.git",
+      link: "https://amazon-clone-seven-green.vercel.app",
       img: "/image/Screenshot 2026-03-24 182638.png",
       colors: ["accent", "primary"],
       date: "Oct 2025"
@@ -186,7 +178,6 @@ export default function WhiteGlassPortfolio() {
       desc: "Productivity ecosystem with Sticky Notes, Focus Mode, and custom syllabus management.",
       tech: ["React Native", "Expo", "SQLite", "TailwindCSS"],
       link: "https://github.com/sengoku70/TimeBinder_Mobile_app.git",
-      github: "https://github.com/sengoku70/TimeBinder_Mobile_app.git",
       img: "/image/WhatsApp Image 2025-11-18 at 11.49.04 AM.jpeg",
       colors: ["secondary", "accent"],
       date: "Sep 2025"
@@ -196,7 +187,6 @@ export default function WhiteGlassPortfolio() {
       desc: "Interactive 3D Rubik's Cube visualizer and solution guide for learning algorithms through immersion.",
       tech: ["React", "Three.js", "TailwindCSS"],
       link: "https://cubicle-beta.vercel.app",
-      github: "https://github.com/sengoku70/Cubicle.git",
       img: "/image/Screenshot 2026-03-24 182734.png",
       colors: ["primary", "accent"],
       date: "Aug 2025"
@@ -253,84 +243,38 @@ export default function WhiteGlassPortfolio() {
   ];
 
   const certificates = [
-    {
-      title: "Full Stack Development",
-      issuer: "LPU Professional Certification",
+    { 
+      title: "Cloud Computing Fundamentals ", 
+      issuer: "LPU Professional Certification", 
       link: "https://drive.google.com/file/d/1Dtn1ejB1cyAnE6beDuPDk8mEgodjF7m6/view?usp=drive_link",
       img: "https://lh3.googleusercontent.com/d/1Dtn1ejB1cyAnE6beDuPDk8mEgodjF7m6"
     },
-    {
-      title: "Data Structures & Algorithms",
-      issuer: "Advanced Credential",
+    { 
+      title: "webdevelopment using .NET", 
+      issuer: "Advanced Credential", 
       link: "https://drive.google.com/file/d/1aRJjplp7NhVa9ZZIoo5OiBzEvcV_XaYW/view?usp=drive_link",
       img: "https://lh3.googleusercontent.com/d/1aRJjplp7NhVa9ZZIoo5OiBzEvcV_XaYW"
     },
-    {
-      title: "Database Management",
-      issuer: "MySQL Mastery",
+    { 
+      title: "Data structures and algorithms", 
+      issuer: "MySQL Mastery", 
       link: "https://drive.google.com/file/d/1h8Pb7wKZ8gBXqN7IztEZMkVFJ0qSg_QG/view?usp=drive_link",
       img: "https://lh3.googleusercontent.com/d/1h8Pb7wKZ8gBXqN7IztEZMkVFJ0qSg_QG"
     },
-    {
-      title: "JavaScript Programming",
-      issuer: "Frontend Academy",
+    { 
+      title: "JavaScript Programming", 
+      issuer: "Frontend Academy", 
       link: "https://drive.google.com/file/d/1t-HSwB2JoMOdVDrNFTvv5CQuRTyL5hqe/view?usp=drive_link",
       img: "https://lh3.googleusercontent.com/d/1t-HSwB2JoMOdVDrNFTvv5CQuRTyL5hqe"
     }
   ];
 
   return (
-    <div
-      className="min-h-screen transition-all duration-1000 text-slate-600 selection:bg-primary/20 selection:text-primary w-full overflow-x-hidden"
+    <div 
+      className="min-h-screen transition-all duration-1000 text-slate-600 selection:bg-primary/20 selection:text-primary"
       style={{ ...cssVariables, backgroundColor: '#ffffff' }}
     >
-      {/* Custom Fancy Cursor */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999] overflow-hidden hidden lg:block">
-        {/* Trail Dots */}
-        {[0.1, 0.2, 0.3, 0.4].map((delay, index) => (
-          <motion.div
-            key={index}
-            animate={{ 
-              x: mousePos.x - 4, 
-              y: mousePos.y - 4,
-              scale: isHovering ? 0.8 : 1 - index * 0.15,
-            }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 400 - index * 60, 
-              damping: 35 + index * 5, 
-              mass: 0.1 + index * 0.15 
-            }}
-            className="w-2 h-2 rounded-full fixed bg-primary/20 z-[98]"
-          />
-        ))}
-
-        {/* Head */}
-        <motion.div
-          animate={{ 
-            x: mousePos.x - 8, 
-            y: mousePos.y - 8,
-            scale: isHovering ? 1.5 : 1,
-          }}
-          transition={{ type: "spring", stiffness: 800, damping: 35, mass: 0.2 }}
-          className="w-4 h-4 rounded-full fixed bg-primary shadow-2xl z-[100]"
-        />
-        <motion.div
-          animate={{ 
-            x: mousePos.x - 24, 
-            y: mousePos.y - 24,
-            scale: isHovering ? 1.8 : 1,
-            borderColor: isHovering ? `rgb(var(--secondary))` : `rgb(var(--primary), 0.3)`,
-            borderWidth: isHovering ? 3 : 2
-          }}
-          transition={{ type: "spring", stiffness: 250, damping: 20, mass: 0.8 }}
-          className="w-12 h-12 rounded-full fixed border-2 z-[99]"
-        />
-      </div>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        * { cursor: none !important; }
-        
+      <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --primary: ${currentCombo.primary};
           --secondary: ${currentCombo.secondary};
@@ -341,25 +285,14 @@ export default function WhiteGlassPortfolio() {
         .border-primary { border-color: rgb(var(--primary)); }
         
         /* Tailwind Opacity helpers for CSS variables */
-        .bg-primary\\/5 { background-color: rgba(var(--primary), 0.05); }
-        .bg-primary\\/10 { background-color: rgba(var(--primary), 0.1); }
-        .bg-primary\\/15 { background-color: rgba(var(--primary), 0.15); }
-        .bg-primary\\/20 { background-color: rgba(var(--primary), 0.2); }
-        .bg-primary\\/25 { background-color: rgba(var(--primary), 0.25); }
-        .bg-primary\\/80 { background-color: rgba(var(--primary), 0.8); }
-        .bg-primary\\/90 { background-color: rgba(var(--primary), 0.9); }
-        .bg-secondary\\/10 { background-color: rgba(var(--secondary), 0.1); }
-        .bg-secondary\\/15 { background-color: rgba(var(--secondary), 0.15); }
-        .bg-secondary\\/20 { background-color: rgba(var(--secondary), 0.2); }
-        .bg-secondary\\/25 { background-color: rgba(var(--secondary), 0.25); }
-        .bg-accent\\/10 { background-color: rgba(var(--accent), 0.1); }
-        .bg-accent\\/15 { background-color: rgba(var(--accent), 0.15); }
-        .bg-accent\\/20 { background-color: rgba(var(--accent), 0.2); }
-        .border-primary\\/20 { border-color: rgba(var(--primary), 0.2); }
+        .bg-primary\\/10 { background-color: rgb(var(--primary) / 0.1); }
+        .bg-primary\\/20 { background-color: rgb(var(--primary) / 0.2); }
+        .bg-primary\\/80 { background-color: rgb(var(--primary) / 0.8); }
+        .border-primary\\/20 { border-color: rgb(var(--primary) / 0.2); }
 
         .cube-face {
-          box-shadow: 0 0 40px rgba(59, 130, 246, 0.2) !important;
-          border-color: rgba(59, 130, 246, 0.3) !important;
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05) !important;
+          border-color: rgba(var(--primary), 0.2) !important;
         }
 
         @keyframes float {
@@ -370,53 +303,68 @@ export default function WhiteGlassPortfolio() {
         .animate-float { animation: float 6s ease-in-out infinite; }
       `}} />
 
-      {/* Blurred Shapes Background with Enhanced Vibrancy */}
+      {/* Blurred Shapes Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none bg-slate-50/50">
         <motion.div 
-          animate={{ x: [0, 150, 0], y: [0, 80, 0], scale: [1, 1.2, 1] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full" 
-        />
-        <motion.div 
-          animate={{ x: [0, -100, 0], y: [0, 150, 0], scale: [1.1, 0.9, 1.1] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-sky-500/20 blur-[140px] rounded-full" 
-        />
-        <motion.div 
-          animate={{ x: [0, 80, 0], y: [0, -100, 0], rotate: [0, 45, 0] }}
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[20%] right-[15%] w-[500px] h-[500px] bg-indigo-600/15 blur-[130px] rounded-full" 
+          className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full" 
         />
         <motion.div 
-          animate={{ x: [0, -50, 0], y: [0, 50, 0], scale: [0.8, 1.1, 0.8] }}
-          transition={{ duration: 18, repeat: Infinity }}
-          className="absolute bottom-[30%] left-[10%] w-[450px] h-[450px] bg-blue-500/15 blur-[110px] rounded-full" 
+          animate={{ x: [0, -80, 0], y: [0, 100, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-secondary/20 blur-[130px] rounded-full" 
         />
         <motion.div 
-          animate={{ x: [0, 120, 0], y: [0, -40, 0] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[40%] left-[30%] w-[350px] h-[350px] bg-cyan-500/15 blur-[90px] rounded-full opacity-60" 
+          animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[20%] right-[15%] w-[400px] h-[400px] bg-accent/15 blur-[110px] rounded-full" 
         />
         <motion.div 
-          animate={{ x: [0, -30, 0], y: [0, 80, 0] }}
-          transition={{ duration: 15, repeat: Infinity }}
-          className="absolute top-[10%] left-[40%] w-[250px] h-[250px] bg-blue-400/20 blur-[70px] rounded-full" 
+          animate={{ scale: [1, 1.2, 1], x: [0, -30, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[40%] left-[10%] w-[350px] h-[350px] bg-secondary/10 blur-[90px] rounded-full" 
         />
         <motion.div 
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 28, repeat: Infinity }}
-          className="absolute bottom-[15%] right-[40%] w-[400px] h-[400px] bg-indigo-500/20 blur-[150px] rounded-full" 
+          animate={{ y: [0, 100, 0], rotate: [0, 90, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+          className="absolute middle-[50%] right-[10%] w-[450px] h-[450px] bg-primary/15 blur-[120px] rounded-full" 
         />
         <motion.div 
-          animate={{ y: [0, 100, 0] }}
-          transition={{ duration: 20, repeat: Infinity }}
-          className="absolute top-[70%] left-[60%] w-[300px] h-[300px] bg-sky-600/15 blur-[80px] rounded-full" 
+          animate={{ scale: [1, 1.3, 1], x: [0, 50, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[20%] left-[30%] w-[300px] h-[300px] bg-accent/10 blur-[100px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ x: [0, -120, 0], y: [0, 80, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[60%] right-[30%] w-[400px] h-[400px] bg-primary/20 blur-[130px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.4, 1], y: [0, -60, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[10%] left-[5%] w-[450px] h-[450px] bg-secondary/15 blur-[110px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ x: [0, 80, 0], rotate: [0, -45, 0] }}
+          transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[30%] left-[50%] w-[350px] h-[350px] bg-accent/20 blur-[100px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ x: [-100, 100, -100], y: [100, -100, 100] }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[10%] right-[40%] w-[500px] h-[500px] bg-primary/10 blur-[140px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.5, 1], rotate: [0, 360, 0] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-20%] left-[10%] w-[600px] h-[600px] bg-secondary/5 blur-[150px] rounded-full" 
         />
       </div>
 
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 p-6 flex justify-center">
-        <div className="backdrop-blur-2xl bg-white/60 border border-white px-8 py-3 rounded-full flex items-center justify-between gap-12 max-w-4xl w-full shadow-[0_20px_50px_rgba(0,0,0,0.08),inset_0_0_15px_rgba(255,255,255,0.5)]">
+        <div className="backdrop-blur-2xl bg-white/60 border-[1.5px] border-slate-200/80 px-8 py-3 rounded-full flex items-center justify-between gap-12 max-w-4xl w-full shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)]">
           <h1 className="text-xl font-black text-slate-900 tracking-tighter">Baibhav Kumar <span className="text-primary">.</span></h1>
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
             {["About", "Skills", "Certificates", "Projects", "Contact"].map((item) => (
@@ -473,7 +421,7 @@ export default function WhiteGlassPortfolio() {
             transition={{ delay: 0.1 }}
             className="text-7xl md:text-8xl font-black text-slate-900 tracking-tight mb-6 leading-[1.1]"
           >
-            MERN <span
+            MERN <span 
               className="text-transparent bg-clip-text"
               style={{ backgroundImage: `linear-gradient(to right, rgb(var(--primary)), rgb(var(--accent)), rgb(var(--secondary)))` }}
             >
@@ -488,7 +436,7 @@ export default function WhiteGlassPortfolio() {
             className="text-lg md:text-xl text-slate-600 max-w-2xl mb-10 leading-relaxed"
           >
             I'm Baibhav Kumar, a CS student at LPU specialized in building high-performance,
-            scalable applications with focus on system architecture and modern UX.
+            scalable applications with focus on <span className="text-primary font-bold">Full Stack Engineering</span> and modern UX.
           </motion.p>
 
           <motion.div
@@ -497,10 +445,7 @@ export default function WhiteGlassPortfolio() {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap justify-center gap-4"
           >
-            <Button
-              variant="primary"
-              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-            >
+            <Button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
               View My Work
             </Button>
             <Button
@@ -522,7 +467,6 @@ export default function WhiteGlassPortfolio() {
         {/* Bento About & Education Section */}
         <section id="about" className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
           <Card className="md:col-span-2 p-10 relative group border-primary/20 bg-primary/5">
-
             <h3 className="text-4xl font-black text-slate-900 mb-6 tracking-tight">The Architect</h3>
             <p className="text-xl text-slate-700 leading-relaxed max-w-2xl font-medium">
               Currently pursuing B.Tech in Computer Science at Lovely Professional University.
@@ -597,9 +541,9 @@ export default function WhiteGlassPortfolio() {
               >
                 <Card className="p-0 h-full flex flex-col border-slate-200 hover:border-primary/30 group overflow-hidden">
                   <div className="aspect-[4/3] w-full relative overflow-hidden bg-slate-100">
-                    <img
-                      src={cert.img}
-                      alt={cert.title}
+                    <img 
+                      src={cert.img} 
+                      alt={cert.title} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                     />
                     <div className="absolute inset-x-0 bottom-0 p-3 bg-white/70 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform border-t border-slate-200">
@@ -608,8 +552,8 @@ export default function WhiteGlassPortfolio() {
                   </div>
                   <div className="p-6 relative">
                     <div className="flex items-center gap-2 mb-2">
-                      <Award size={14} className="text-primary" />
-                      <p className="text-xs text-slate-500 capitalize">{cert.issuer}</p>
+                       <Award size={14} className="text-primary" />
+                       <p className="text-xs text-slate-500 capitalize">{cert.issuer}</p>
                     </div>
                     <h4 className="font-bold text-slate-900 text-sm leading-tight group-hover:text-primary transition-colors">{cert.title}</h4>
                   </div>
@@ -633,23 +577,23 @@ export default function WhiteGlassPortfolio() {
                 className="relative cursor-pointer group/card"
               >
                 <Card className="p-0 h-full border-slate-200 bg-white/30 transition-colors group-hover/card:border-primary/30 group-hover/card:bg-white/50">
-                  <div
+                  <div 
                     className="aspect-video w-full mb-6 transition-all duration-500 relative overflow-hidden group"
                   >
                     <div className="absolute inset-0 bg-slate-100/30 z-0" />
                     {project.img && (
-                      <img
-                        src={project.img}
-                        alt={project.title}
-                        className="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none"
+                      <img 
+                        src={project.img} 
+                        alt={project.title} 
+                        className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none"
                       />
                     )}
                     <div className="absolute inset-x-0 bottom-0 p-4 bg-white/80 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform border-t border-slate-200">
                       <div className="text-xs text-slate-500 font-mono">{project.date}</div>
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-3">
-                      <Button
-                        variant="primary"
+                      <Button 
+                        variant="primary" 
                         className="gap-2 shadow-xl"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -658,8 +602,8 @@ export default function WhiteGlassPortfolio() {
                       >
                         <Github size={16} /> Code
                       </Button>
-                      <Button
-                        variant="outline"
+                      <Button 
+                        variant="outline" 
                         className="gap-2 shadow-lg bg-white/50"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -687,6 +631,7 @@ export default function WhiteGlassPortfolio() {
             ))}
           </div>
         </section>
+
         {/* Beyond Code Section */}
         <section id="beyond-code" className="mb-32 relative py-12">
           <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[35rem] font-black text-[#22c55e] opacity-[0.6] select-none pointer-events-none z-0">
@@ -695,80 +640,80 @@ export default function WhiteGlassPortfolio() {
           <div className="relative z-10">
             <SectionHeading icon={Zap}>Beyond Code</SectionHeading>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-8 group hover:border-primary/20 bg-primary/5 transition-all">
-              <div className="flex gap-4 items-start">
-                <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-primary group-hover:scale-110 transition-transform">
-                  <Monitor size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">Native Development (C++ & Qt)</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Currently deep-diving into <span className="text-primary font-semibold">C++ development using Qt</span> to build high-performance, native window applications. 
-                    I'm focused on mastering low-level system control and creating fluid desktop experiences that interact directly with the OS.
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-8 group hover:border-secondary/20 bg-secondary/5 transition-all">
-              <div className="flex gap-4 items-start">
-                <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-secondary group-hover:scale-110 transition-transform">
-                  <Cloud size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">Cloud & DevOps Mastery</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Expanding my knowledge base into <span className="text-secondary font-semibold">Cloud Infrastructure and DevOps pipelines</span>. 
-                    Learning to architect scalable environments and automate delivery to push my digital solutions beyond just code and into robust, production-ready ecosystems.
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          <div className="mt-12">
-            <h4 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
-              <span className="w-12 h-[1px] bg-slate-200"></span>
-              Upcoming Projects
-              <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] uppercase tracking-widest rounded-full">In Development</span>
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                {
-                  title: "Cloud Architect",
-                  desc: "Simulated cloud architecture explorer focusing on multi-tier service orchestration and scalability.",
-                  tech: ["AWS", "Docker", "Kubernetes", "C++"],
-                  colors: ["primary", "secondary"]
-                },
-                {
-                  title: "AI Class Converter",
-                  desc: "AI-based offline to online class conversion system to transform physical learning content into interactive digital formats.",
-                  tech: ["Python", "TensorFlow", "React Native", "Flask"],
-                  colors: ["secondary", "accent"]
-                }
-              ].map((proj, i) => (
-                <Card key={i} className="p-0 border-primary/10 overflow-hidden">
-                  <div className="flex h-full flex-col md:flex-row">
-                    <div className="md:w-1/3 aspect-square bg-slate-900 flex items-center justify-center relative group">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 opacity-60" />
-                      <div className="relative z-10 flex flex-col items-center gap-2">
-                        <Terminal size={32} className="text-white opacity-50" />
-                        <span className="text-[10px] text-white font-black uppercase tracking-[0.3em] animate-pulse">Upcoming</span>
-                      </div>
-                    </div>
-                    <div className="p-6 md:w-2/3 flex flex-col justify-center">
-                      <h4 className="text-lg font-bold text-slate-900 mb-2">{proj.title}</h4>
-                      <p className="text-xs text-slate-500 mb-4">{proj.desc}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {proj.tech.map(t => (
-                          <span key={t} className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{t}</span>
-                        ))}
-                      </div>
-                    </div>
+              <Card className="p-8 group hover:border-primary/20 bg-primary/5 transition-all">
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-primary group-hover:scale-110 transition-transform">
+                    <Monitor size={24} />
                   </div>
-                </Card>
-              ))}
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Native Development (C++ & Qt)</h3>
+                    <p className="text-slate-600 leading-relaxed">
+                      Currently deep-diving into <span className="text-primary font-semibold">C++ development using Qt</span> to build high-performance, native window applications. 
+                      I'm focused on mastering low-level system control and creating fluid desktop experiences that interact directly with the OS.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-8 group hover:border-secondary/20 bg-secondary/5 transition-all">
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-secondary group-hover:scale-110 transition-transform">
+                    <Cloud size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Cloud & DevOps Mastery</h3>
+                    <p className="text-slate-600 leading-relaxed">
+                      Expanding my knowledge base into <span className="text-secondary font-semibold">Cloud Infrastructure and DevOps pipelines</span>. 
+                      Learning to architect scalable environments and automate delivery to push my digital solutions beyond just code and into robust, production-ready ecosystems.
+                    </p>
+                  </div>
+                </div>
+              </Card>
             </div>
+
+            <div className="mt-12">
+              <h4 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
+                <span className="w-12 h-[1px] bg-slate-200"></span>
+                Upcoming Projects
+                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] uppercase tracking-widest rounded-full">In Development</span>
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  {
+                    title: "Cloud Architect",
+                    desc: "Simulated cloud architecture explorer focusing on multi-tier service orchestration and scalability.",
+                    tech: ["AWS", "Docker", "Kubernetes", "C++"],
+                    colors: ["primary", "secondary"]
+                  },
+                  {
+                    title: "AI Class Converter",
+                    desc: "AI-based offline to online class conversion system to transform physical learning content into interactive digital formats.",
+                    tech: ["Python", "TensorFlow", "React Native", "Flask"],
+                    colors: ["secondary", "accent"]
+                  }
+                ].map((proj, i) => (
+                  <Card key={i} className="p-0 border-primary/10 overflow-hidden">
+                    <div className="flex h-full flex-col md:flex-row">
+                      <div className="md:w-1/3 aspect-square bg-slate-900 flex items-center justify-center relative group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 opacity-60" />
+                        <div className="relative z-10 flex flex-col items-center gap-2">
+                          <Terminal size={32} className="text-white opacity-50" />
+                          <span className="text-[10px] text-white font-black uppercase tracking-[0.3em] animate-pulse">Upcoming</span>
+                        </div>
+                      </div>
+                      <div className="p-6 md:w-2/3 flex flex-col justify-center">
+                        <h4 className="text-lg font-bold text-slate-900 mb-2">{proj.title}</h4>
+                        <p className="text-xs text-slate-500 mb-4">{proj.desc}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {proj.tech.map(t => (
+                            <span key={t} className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </section>
